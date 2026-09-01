@@ -17,6 +17,8 @@ import { Disclaimer } from './components/Disclaimer.tsx';
 import { VerificationSessionService } from './services/VerificationSessionService.ts';
 import { useFlowState } from './services/useFlowState.ts';
 import type { ClaimedReceipt } from './domain/receipt.ts';
+import { LangProvider } from './i18n/LangContext.tsx';
+import { LangToggle } from './i18n/LangToggle.tsx';
 
 export function App() {
   const service = VerificationSessionService.getInstance();
@@ -39,7 +41,7 @@ export function App() {
   };
 
   return (
-    <>
+    <LangProvider>
       {/*
         Everything behind the scrim is switched off while a verification runs: aria-hidden keeps
         assistive tech out, inert blocks focus and pointer events at the platform level, and the
@@ -52,6 +54,7 @@ export function App() {
         inert={busy}
       >
         <header className="mast">
+          <LangToggle />
           <p className="mast__kicker">Brief 04 · Case study</p>
           <h1 className="mast__h">Is this payment real?</h1>
           <p className="mast__sub">
@@ -95,6 +98,6 @@ export function App() {
           onCancel={() => service.resolveStepUp(false)}
         />
       )}
-    </>
+    </LangProvider>
   );
 }

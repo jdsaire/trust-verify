@@ -16,6 +16,7 @@
 import { useState } from 'react';
 import { SecureKeypad } from './SecureKeypad.tsx';
 import { ProvenanceBadge } from './ProvenanceBadge.tsx';
+import { useLang } from '../i18n/LangContext.tsx';
 
 interface StepUpChallengeProps {
   band: string;
@@ -34,20 +35,21 @@ export function StepUpChallenge({
   onResolve,
   onCancel,
 }: StepUpChallengeProps) {
+  const { t } = useLang();
   const [pin, setPin] = useState('');
   const complete = pin.length === PIN_LENGTH;
 
   return (
-    <div className="scrim" role="dialog" aria-modal="true" aria-label="Step-up authentication">
+    <div className="scrim" role="dialog" aria-modal="true" aria-label={t('stepup_dialog_aria')}>
       <div className="scrim__panel stepup">
         <div className="sec__panelHead">
-          <h3 className="stepup__h">Confirm it’s you</h3>
+          <h3 className="stepup__h">{t('stepup_h')}</h3>
           <ProvenanceBadge provenance="simulated" />
         </div>
 
         <p className="stepup__why">
-          This session scored <strong>{band.toLowerCase()}</strong> ({score}/100), so the ledger
-          check needs your PIN before it runs.
+          {t('stepup_why_pre')}
+          <strong>{band.toLowerCase()}</strong> ({score}/100){t('stepup_why_post')}
         </p>
 
         <ul className="stepup__signals">
@@ -56,28 +58,34 @@ export function StepUpChallenge({
           ))}
         </ul>
 
-        <div className="pin" role="status" aria-label={`${pin.length} of ${PIN_LENGTH} digits entered`}>
+        <div
+          className="pin"
+          role="status"
+          aria-label={`${pin.length}${t('stepup_pin_aria_mid')}${PIN_LENGTH}${t('stepup_pin_aria_end')}`}
+        >
           {Array.from({ length: PIN_LENGTH }, (_, i) => (
             <span key={i} className={`pin__dot ${i < pin.length ? 'pin__dot--on' : ''}`} />
           ))}
         </div>
 
         <SecureKeypad
-          ariaLabel="Secure keypad, PIN entry"
+          ariaLabel={`${t('kp_aria_prefix')}, ${t('kp_aria_pin')}`}
           onDigit={(d) => setPin((v) => (v.length >= PIN_LENGTH ? v : v + d))}
           onBackspace={() => setPin((v) => v.slice(0, -1))}
           onClear={() => setPin('')}
         />
 
         <p className="stepup__note">
-          Staged challenge — any {PIN_LENGTH} digits are accepted. No credential is checked or sent.
+          {t('stepup_note_pre')}
+          {PIN_LENGTH}
+          {t('stepup_note_post')}
         </p>
 
         <button type="button" className="cta" disabled={!complete} onClick={onResolve}>
-          Confirm
+          {t('stepup_confirm')}
         </button>
         <button type="button" className="scrim__cancel" onClick={onCancel}>
-          Cancel
+          {t('action_cancel')}
         </button>
       </div>
     </div>

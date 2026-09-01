@@ -11,6 +11,7 @@
 
 import type { HandshakeStep } from '../services/VerificationSessionService.ts';
 import { ProvenanceBadge } from './ProvenanceBadge.tsx';
+import { useLang } from '../i18n/LangContext.tsx';
 
 interface ProcessingScrimProps {
   steps: HandshakeStep[];
@@ -19,17 +20,18 @@ interface ProcessingScrimProps {
 }
 
 export function ProcessingScrim({ steps, phase, onCancel }: ProcessingScrimProps) {
+  const { t } = useLang();
   return (
-    <div className="scrim" role="dialog" aria-modal="true" aria-label="Verifying">
+    <div className="scrim" role="dialog" aria-modal="true" aria-label={t('ps_dialog_aria')}>
       <div className="scrim__panel">
         <div className="spinner" aria-hidden="true" />
         <p className="scrim__status" role="status">
-          {phase === 'handshake' ? 'Establishing a secure channel…' : 'Checking the ledger…'}
+          {phase === 'handshake' ? t('ps_status_handshake') : t('ps_status_requesting')}
         </p>
 
         <div className="scrim__steps">
           <div className="scrim__stepsHead">
-            <span>Transport security</span>
+            <span>{t('ps_transport_security')}</span>
             <ProvenanceBadge provenance="simulated" />
           </div>
           <ol>
@@ -43,7 +45,7 @@ export function ProcessingScrim({ steps, phase, onCancel }: ProcessingScrimProps
         </div>
 
         <button type="button" className="scrim__cancel" onClick={onCancel}>
-          Cancel
+          {t('action_cancel')}
         </button>
       </div>
     </div>

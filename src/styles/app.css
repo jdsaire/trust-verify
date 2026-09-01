@@ -94,10 +94,42 @@ body {
 }
 
 .mast {
+  position: relative;
   background: var(--brand-primary);
   color: #fff;
   padding: 26px var(--pad) 22px;
   padding-top: max(26px, env(safe-area-inset-top));
+}
+
+/* Language toggle — new for this repo's standalone i18n layer, styled for the mast's dark surface. */
+.langtoggle {
+  position: absolute;
+  top: max(16px, env(safe-area-inset-top));
+  right: var(--pad);
+  display: flex;
+  gap: 2px;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.langtoggle__opt {
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  min-width: 30px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: calc(var(--radius-sm) - 3px);
+  background: transparent;
+  color: rgb(255 255 255 / 75%);
+  cursor: pointer;
+}
+
+.langtoggle__opt--on {
+  background: #fff;
+  color: var(--brand-primary);
 }
 
 .mast__kicker {

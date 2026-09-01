@@ -13,6 +13,7 @@
  */
 
 import { useMemo } from 'react';
+import { useLang } from '../i18n/LangContext.tsx';
 
 interface SecureKeypadProps {
   onDigit: (digit: string) => void;
@@ -44,6 +45,7 @@ export function SecureKeypad({
   disabled = false,
   ariaLabel,
 }: SecureKeypadProps) {
+  const { t } = useLang();
   const keys = useMemo(
     () => (shuffle ? shuffled() : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0']),
     [shuffle],
@@ -68,14 +70,14 @@ export function SecureKeypad({
         onClick={onClear}
         disabled={disabled}
       >
-        Clear
+        {t('kp_clear')}
       </button>
       <button
         type="button"
         className="keypad__key keypad__key--util"
         onClick={onBackspace}
         disabled={disabled}
-        aria-label="Delete last digit"
+        aria-label={t('kp_delete_aria')}
       >
         ⌫
       </button>

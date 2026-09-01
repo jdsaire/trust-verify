@@ -14,36 +14,38 @@ import { useState } from 'react';
 import { ProvenanceBadge } from './ProvenanceBadge.tsx';
 import type { HandshakeMaterial, CertificateInfo, RiskMode } from '../services/ledgerApi.ts';
 import { VerificationSessionService } from '../services/VerificationSessionService.ts';
+import { useLang } from '../i18n/LangContext.tsx';
 
 function Cert({ title, cert }: { title: string; cert: CertificateInfo }) {
+  const { t } = useLang();
   return (
     <div className="cert">
       <h4 className="cert__h">{title}</h4>
       <dl className="cert__dl">
         <div>
-          <dt>Subject</dt>
+          <dt>{t('sec_cert_subject')}</dt>
           <dd>{cert.subject}</dd>
         </div>
         <div>
-          <dt>Issuer</dt>
+          <dt>{t('sec_cert_issuer')}</dt>
           <dd>{cert.issuer}</dd>
         </div>
         <div>
-          <dt>Serial</dt>
+          <dt>{t('sec_cert_serial')}</dt>
           <dd className="mono">{cert.serial}</dd>
         </div>
         <div>
-          <dt>Valid</dt>
+          <dt>{t('sec_cert_valid')}</dt>
           <dd>
             {cert.validFrom} → {cert.validTo}
           </dd>
         </div>
         <div>
-          <dt>Key</dt>
+          <dt>{t('sec_cert_key')}</dt>
           <dd>{cert.keyAlgorithm}</dd>
         </div>
         <div>
-          <dt>SHA-256</dt>
+          <dt>{t('sec_cert_sha')}</dt>
           <dd className="mono cert__fp">{cert.fingerprintSha256}</dd>
         </div>
       </dl>
@@ -58,6 +60,7 @@ export function SecurityPanel({
   handshake: HandshakeMaterial | null;
   sessionId: string;
 }) {
+  const { t } = useLang();
   const service = VerificationSessionService.getInstance();
   const sameInstance = service === VerificationSessionService.getInstance();
   const [mode, setMode] = useState<RiskMode>(service.riskMode);
@@ -70,25 +73,19 @@ export function SecurityPanel({
   return (
     <section className="sec" aria-labelledby="sec-h">
       <h2 id="sec-h" className="sec__h">
-        Security layer
+        {t('sec_h')}
       </h2>
 
       {/* ---- Panel 1: staged. Nothing below this heading is real. ---- */}
       <div className="sec__panel sec__panel--sim">
         <div className="sec__panelHead">
-          <h3>Demonstrated security patterns</h3>
+          <h3>{t('sec_sim_heading')}</h3>
           <ProvenanceBadge provenance="simulated" />
         </div>
-        <p className="sec__panelNote">
-          The patterns below are demonstrated in the interface against fabricated fixtures. The
-          certificates are not issued by any authority, the fingerprints identify nothing, the
-          keys sign nothing, and the risk score measures nothing. Nothing in this panel is a
-          measurement of anything. This page’s actual transport security is whatever its host
-          provides — these rows describe a staged exchange, not that connection.
-        </p>
+        <p className="sec__panelNote">{t('sec_sim_note')}</p>
 
-        <div className="riskmode" role="group" aria-label="Staged session risk">
-          <span className="riskmode__k">Staged session</span>
+        <div className="riskmode" role="group" aria-label={t('sec_riskmode_aria')}>
+          <span className="riskmode__k">{t('sec_riskmode_label')}</span>
           <div className="riskmode__opts">
             <button
               type="button"
@@ -96,7 +93,7 @@ export function SecurityPanel({
               aria-pressed={mode === 'normal'}
               onClick={() => chooseMode('normal')}
             >
-              Low risk
+              {t('sec_riskmode_low')}
             </button>
             <button
               type="button"
@@ -104,45 +101,42 @@ export function SecurityPanel({
               aria-pressed={mode === 'elevated'}
               onClick={() => chooseMode('elevated')}
             >
-              Elevated → step-up
+              {t('sec_riskmode_elevated')}
             </button>
           </div>
-          <p className="riskmode__note">
-            Picks which staged session the next verification runs against. An elevated score
-            demands re-authentication before the ledger is touched.
-          </p>
+          <p className="riskmode__note">{t('sec_riskmode_note')}</p>
         </div>
 
         {handshake ? (
           <>
             <div className="sec__row">
-              <span className="sec__k">Transport</span>
-              <span className="sec__v">HTTPS — SSL/TLS record layer</span>
+              <span className="sec__k">{t('sec_transport_label')}</span>
+              <span className="sec__v">{t('sec_transport_value')}</span>
             </div>
             <div className="sec__row">
-              <span className="sec__k">Protocol</span>
+              <span className="sec__k">{t('sec_protocol_label')}</span>
               <span className="sec__v">{handshake.protocol}</span>
             </div>
             <div className="sec__row">
-              <span className="sec__k">Cipher suite</span>
+              <span className="sec__k">{t('sec_cipher_label')}</span>
               <span className="sec__v mono">{handshake.cipherSuite}</span>
             </div>
             <div className="sec__row">
-              <span className="sec__k">Key exchange</span>
-              <span className="sec__v">ECDHE with RSA-2048 asymmetric keys</span>
+              <span className="sec__k">{t('sec_keyexchange_label')}</span>
+              <span className="sec__v">{t('sec_keyexchange_value')}</span>
             </div>
             <div className="sec__row">
-              <span className="sec__k">Mutual authentication</span>
-              <span className="sec__v">Both sides presented and validated a certificate</span>
+              <span className="sec__k">{t('sec_mutualauth_label')}</span>
+              <span className="sec__v">{t('sec_mutualauth_value')}</span>
             </div>
 
             <div className="certs">
-              <Cert title="Server certificate" cert={handshake.serverCertificate} />
-              <Cert title="Client certificate" cert={handshake.clientCertificate} />
+              <Cert title={t('sec_cert_server_title')} cert={handshake.serverCertificate} />
+              <Cert title={t('sec_cert_client_title')} cert={handshake.clientCertificate} />
             </div>
 
             <div className="risk">
-              <h4 className="cert__h">RSA Adaptive — risk scoring</h4>
+              <h4 className="cert__h">{t('sec_risk_heading')}</h4>
               <p className="risk__band">
                 {handshake.adaptiveRisk.band} · {handshake.adaptiveRisk.score}/100
               </p>
@@ -152,56 +146,49 @@ export function SecurityPanel({
                 ))}
               </ul>
               <p className="risk__note">
-                {handshake.stepUpRequired
-                  ? 'This band demands a step-up challenge before the ledger call proceeds.'
-                  : 'This band clears without a challenge. Switch the staged session above to see the step-up path.'}
+                {handshake.stepUpRequired ? t('sec_risk_note_stepup') : t('sec_risk_note_clear')}
               </p>
             </div>
           </>
         ) : (
-          <p className="sec__empty">
-            Run a verification to see the staged handshake for this session.
-          </p>
+          <p className="sec__empty">{t('sec_empty')}</p>
         )}
       </div>
 
       {/* ---- Panel 2: real. Everything below this heading runs in this app. ---- */}
       <div className="sec__panel sec__panel--impl">
         <div className="sec__panelHead">
-          <h3>Controls that actually run here</h3>
+          <h3>{t('sec_impl_heading')}</h3>
           <ProvenanceBadge provenance="implemented" />
         </div>
-        <p className="sec__panelNote sec__panelNote--impl">
-          These run in this app’s client code and can be exercised on this page right now. They are
-          the controls behind the staged patterns above — the pad the step-up PIN is typed on is
-          this pad.
-        </p>
+        <p className="sec__panelNote sec__panelNote--impl">{t('sec_impl_note')}</p>
         <ul className="impl">
           <li>
-            <strong>In-app secure keypad</strong> — the app’s own numeric pad, so a third-party
-            keyboard never sees the input.
+            <strong>{t('sec_impl_item1_strong')}</strong> {t('sec_impl_item1_post')}
           </li>
           <li>
-            <strong>Shuffled digits</strong> — key positions change per session, so watching the
-            finger path reveals nothing.
+            <strong>{t('sec_impl_item2_strong')}</strong> {t('sec_impl_item2_post')}
           </li>
           <li>
-            <strong>Execution lock</strong> — one verification at a time; a second tap is dropped
-            before it reaches the network.
+            <strong>{t('sec_impl_item3_strong')}</strong> {t('sec_impl_item3_post')}
           </li>
           <li>
-            <strong>Blocking scrim</strong> — the page behind it is <code>inert</code> and
-            <code> aria-hidden</code> while a request is in flight.
+            <strong>{t('sec_impl_item4_strong')}</strong> {t('sec_impl_item4_mid')}
+            <code>inert</code>
+            {t('sec_impl_item4_and')}
+            <code> aria-hidden</code>
+            {t('sec_impl_item4_post')}
           </li>
           <li>
-            <strong>Privacy defaults</strong> — recipient names truncated, phone numbers masked to
-            the last three digits.
+            <strong>{t('sec_impl_item5_strong')}</strong> {t('sec_impl_item5_post')}
           </li>
           <li>
-            <strong>Single session instance</strong> —{' '}
-            <code>VerificationSessionService.getInstance()</code> returns the same object every
-            time{sameInstance ? '' : ' (assertion failed)'}; the execution lock depends on that.
-            Session <code className="mono">{sessionId}</code>.
+            <strong>{t('sec_impl_item6_strong')}</strong> {t('sec_impl_item6_mid')}
+            <code>VerificationSessionService.getInstance()</code>
+            {t('sec_impl_item6_post')}
+            {!sameInstance && t('sec_impl_item6_fail_suffix')}
+            {t('sec_impl_item6_end')}
+            <code className="mono">{sessionId}</code>.
           </li>
         </ul>
       </div>

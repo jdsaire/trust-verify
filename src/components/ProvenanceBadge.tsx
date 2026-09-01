@@ -12,25 +12,22 @@
  * interleaved, so the segregation is structural and not only a matter of labelling.
  */
 
+import { useLang } from '../i18n/LangContext.tsx';
+import type { TranslationKey } from '../i18n/translations.ts';
+
 export type ClaimProvenance = 'simulated' | 'implemented';
 
-const COPY: Record<ClaimProvenance, { label: string; title: string }> = {
-  simulated: {
-    label: 'SIMULATED',
-    title:
-      'Demonstrated against fabricated fixtures. Not a real credential, connection, or measurement.',
-  },
-  implemented: {
-    label: 'IMPLEMENTED',
-    title: 'A control that genuinely runs in this app’s client code.',
-  },
+const KEYS: Record<ClaimProvenance, { label: TranslationKey; title: TranslationKey }> = {
+  simulated: { label: 'badge_sim_label', title: 'badge_sim_title' },
+  implemented: { label: 'badge_impl_label', title: 'badge_impl_title' },
 };
 
 export function ProvenanceBadge({ provenance }: { provenance: ClaimProvenance }) {
-  const { label, title } = COPY[provenance];
+  const { t } = useLang();
+  const { label, title } = KEYS[provenance];
   return (
-    <span className={`badge badge--${provenance}`} title={title}>
-      {label}
+    <span className={`badge badge--${provenance}`} title={t(title)}>
+      {t(label)}
     </span>
   );
 }

@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { SecureKeypad } from './SecureKeypad.tsx';
 import { NOT_SHOWN, type ClaimedReceipt } from '../domain/receipt.ts';
 import { SAMPLES, type Sample } from '../domain/samples.ts';
+import { useLang } from '../i18n/LangContext.tsx';
 
 interface EntryScreenProps {
   onSubmit: (claim: ClaimedReceipt) => void;
@@ -23,6 +24,7 @@ interface EntryScreenProps {
 type Field = 'operation' | 'amount';
 
 export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
+  const { t } = useLang();
   const [operation, setOperation] = useState('');
   const [amount, setAmount] = useState('');
   const [recipient, setRecipient] = useState('');
@@ -69,14 +71,11 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
   return (
     <section className="entry" aria-labelledby="entry-h">
       <h2 id="entry-h" className="entry__h">
-        Check a payment receipt
+        {t('entry_h')}
       </h2>
-      <p className="entry__lede">
-        Enter the operation number from the receipt. It is the only field on it the sender cannot
-        invent.
-      </p>
+      <p className="entry__lede">{t('entry_lede')}</p>
 
-      <div className="samples" role="group" aria-label="Sample receipts">
+      <div className="samples" role="group" aria-label={t('entry_samples_aria')}>
         {SAMPLES.map((s) => (
           <button
             key={s.id}
@@ -95,9 +94,9 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
           type="button"
           className={`field ${focused === 'operation' ? 'field--on' : ''}`}
           onClick={() => setFocused('operation')}
-          aria-label="Operation number field"
+          aria-label={t('entry_field_op_aria')}
         >
-          <span className="field__label">Nro. de operación</span>
+          <span className="field__label">{t('entry_field_op_label')}</span>
           <span className="field__value field__value--mono">{operation || '—'}</span>
         </button>
 
@@ -105,9 +104,9 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
           type="button"
           className={`field ${focused === 'amount' ? 'field--on' : ''}`}
           onClick={() => setFocused('amount')}
-          aria-label="Amount field"
+          aria-label={t('entry_field_amount_aria')}
         >
-          <span className="field__label">Monto</span>
+          <span className="field__label">{t('entry_field_amount_label')}</span>
           <span className="field__value field__value--money">
             S/ {amount ? amountValue.toFixed(2) : '0'}
           </span>
@@ -119,14 +118,12 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
         onBackspace={back}
         onClear={clear}
         disabled={disabled}
-        ariaLabel={`Secure keypad, ${focused === 'operation' ? 'operation number' : 'amount'}`}
+        ariaLabel={`${t('kp_aria_prefix')}, ${focused === 'operation' ? t('kp_aria_operation') : t('kp_aria_amount')}`}
       />
 
       <details className="optional">
-        <summary>Other fields on the receipt (optional)</summary>
-        <p className="optional__note">
-          Leave these as “not shown” if you can’t read them. You’ll still get a verdict.
-        </p>
+        <summary>{t('entry_optional_summary')}</summary>
+        <p className="optional__note">{t('entry_optional_note')}</p>
 
         <label className="check">
           <input
@@ -135,14 +132,14 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
             onChange={(e) => setRecipientNotShown(e.target.checked)}
             disabled={disabled}
           />
-          Recipient not shown
+          {t('entry_recipient_check')}
         </label>
         <input
           className="text"
           type="text"
           value={recipient}
-          placeholder="Destinatario"
-          aria-label="Claimed recipient name"
+          placeholder={t('entry_recipient_placeholder')}
+          aria-label={t('entry_recipient_aria')}
           disabled={disabled || recipientNotShown}
           onChange={(e) => setRecipient(e.target.value)}
         />
@@ -154,15 +151,15 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
             onChange={(e) => setCodeNotShown(e.target.checked)}
             disabled={disabled}
           />
-          Security code not shown / I don’t know
+          {t('entry_code_check')}
         </label>
         <input
           className="text"
           type="text"
           inputMode="numeric"
           value={code}
-          placeholder="Código de seguridad"
-          aria-label="Claimed security code"
+          placeholder={t('entry_code_placeholder')}
+          aria-label={t('entry_code_aria')}
           disabled={disabled || codeNotShown}
           onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 3))}
         />
@@ -175,13 +172,11 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
         disabled={!ready}
         aria-disabled={!ready}
       >
-        Verify this receipt
+        {t('entry_cta')}
       </button>
       {!ready && !disabled && (
         <p className="cta__hint" role="status">
-          {operationValid
-            ? 'Enter the amount the receipt claims.'
-            : 'Enter the operation number (6–12 digits).'}
+          {operationValid ? t('entry_hint_amount') : t('entry_hint_operation')}
         </p>
       )}
     </section>

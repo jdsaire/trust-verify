@@ -9,90 +9,87 @@
 
 import type { Verdict } from '../domain/verdict.ts';
 import { RECEIPT_FIELDS } from '../domain/receipt.ts';
+import { useLang } from '../i18n/LangContext.tsx';
+import type { TranslationKey } from '../i18n/translations.ts';
 
-const HEADLINE: Record<Verdict['kind'], { title: string; line: string }> = {
-  verified: {
-    title: 'Payment found',
-    line: 'The ledger has this operation, and every field you could read matches it.',
-  },
-  mismatch: {
-    title: 'Do not accept',
-    line: 'The ledger has this operation — but the receipt disagrees with it.',
-  },
-  'not-found': {
-    title: 'No such payment',
-    line: 'The ledger has no operation with this number. Nothing was transferred.',
-  },
+const HEADLINE: Record<Verdict['kind'], { title: TranslationKey; line: TranslationKey }> = {
+  verified: { title: 'verdict_verified_title', line: 'verdict_verified_line' },
+  mismatch: { title: 'verdict_mismatch_title', line: 'verdict_mismatch_line' },
+  'not-found': { title: 'verdict_notfound_title', line: 'verdict_notfound_line' },
 };
 
 export function VerdictScreen({ verdict, onAgain }: { verdict: Verdict; onAgain: () => void }) {
+  const { t } = useLang();
   const head = HEADLINE[verdict.kind];
 
   return (
     <section className={`verdict verdict--${verdict.kind}`} aria-labelledby="verdict-h">
-      <p className="verdict__eyebrow">Nro. de operación {verdict.operationNumber}</p>
+      <p className="verdict__eyebrow">
+        {t('verdict_eyebrow_prefix')} {verdict.operationNumber}
+      </p>
       <h2 id="verdict-h" className="verdict__h">
-        {head.title}
+        {t(head.title)}
       </h2>
-      <p className="verdict__line">{head.line}</p>
+      <p className="verdict__line">{t(head.line)}</p>
 
       {verdict.kind === 'mismatch' && (
         <p className="verdict__flag" role="alert">
-          Disagrees with the ledger: <strong>{verdict.mismatchedLabels.join(', ')}</strong>. A real
-          operation number does not make the rest of the receipt true.
+          {t('verdict_flag_mismatch_pre')}
+          <strong>{verdict.mismatchedLabels.join(', ')}</strong>
+          {t('verdict_flag_mismatch_post')}
         </p>
       )}
 
       {verdict.kind === 'not-found' && (
         <p className="verdict__flag" role="alert">
-          Every other field on a receipt can be typed by whoever made it. This one could not be —
-          which is why its absence is conclusive.
+          {t('verdict_flag_notfound')}
         </p>
       )}
 
       {verdict.skippedLabels.length > 0 && verdict.kind !== 'not-found' && (
         <p className="verdict__skipped">
-          Not checked, because you couldn’t read {verdict.skippedLabels.length === 1 ? 'it' : 'them'}
-          : <strong>{verdict.skippedLabels.join(', ')}</strong>. The verdict above rests on the
-          operation number, which is enough.
+          {t('verdict_skipped_pre')}
+          {verdict.skippedLabels.length === 1 ? t('verdict_skipped_it') : t('verdict_skipped_them')}
+          : <strong>{verdict.skippedLabels.join(', ')}</strong>
+          {t('verdict_skipped_post')}
         </p>
       )}
 
       {verdict.record && (
         <>
-          <h3 className="verdict__sub">What the ledger says</h3>
+          <h3 className="verdict__sub">{t('verdict_sub_ledger')}</h3>
           <dl className="record">
             <div>
-              <dt>Monto</dt>
+              <dt>{t('verdict_record_amount_label')}</dt>
               <dd>
                 {verdict.record.currency} {verdict.record.amount.toFixed(2)}
               </dd>
             </div>
             <div>
-              <dt>Destinatario</dt>
+              <dt>{t('verdict_record_recipient_label')}</dt>
               <dd>{verdict.record.recipientName}</dd>
             </div>
             <div>
-              <dt>Nro. de celular</dt>
+              <dt>{t('verdict_record_phone_label')}</dt>
               <dd>{verdict.record.recipientPhoneMasked}</dd>
             </div>
             <div>
-              <dt>Fecha y hora</dt>
+              <dt>{t('verdict_record_date_label')}</dt>
               <dd>{verdict.record.timestamp}</dd>
             </div>
             <div>
-              <dt>Destino</dt>
+              <dt>{t('verdict_record_dest_label')}</dt>
               <dd>{verdict.record.destination}</dd>
             </div>
           </dl>
 
-          <h3 className="verdict__sub">Field by field</h3>
+          <h3 className="verdict__sub">{t('verdict_sub_fieldbyfield')}</h3>
           <table className="cmp">
             <thead>
               <tr>
-                <th scope="col">Field</th>
-                <th scope="col">Receipt says</th>
-                <th scope="col">Ledger says</th>
+                <th scope="col">{t('verdict_table_field')}</th>
+                <th scope="col">{t('verdict_table_receipt')}</th>
+                <th scope="col">{t('verdict_table_ledger')}</th>
               </tr>
             </thead>
             <tbody>
@@ -112,10 +109,10 @@ export function VerdictScreen({ verdict, onAgain }: { verdict: Verdict; onAgain:
                     </span>
                     <span className="sr-only">
                       {c.matches === false
-                        ? 'does not match'
+                        ? t('verdict_sr_nomatch')
                         : c.matches === true
-                          ? 'matches'
-                          : 'not checked'}
+                          ? t('verdict_sr_match')
+                          : t('verdict_sr_notchecked')}
                     </span>
                   </td>
                 </tr>
@@ -125,13 +122,13 @@ export function VerdictScreen({ verdict, onAgain }: { verdict: Verdict; onAgain:
         </>
       )}
 
-      <h3 className="verdict__sub">Why only one field settles this</h3>
+      <h3 className="verdict__sub">{t('verdict_sub_why')}</h3>
       <ul className="prov">
         {RECEIPT_FIELDS.map((f) => (
           <li key={f.id} className={`prov__row prov__row--${f.provenance}`}>
             <span className="prov__label">{f.label}</span>
             <span className="prov__tag">
-              {f.provenance === 'backend-anchored' ? 'Written by the ledger' : 'Set by the sender'}
+              {f.provenance === 'backend-anchored' ? t('verdict_prov_backend') : t('verdict_prov_sender')}
             </span>
             <span className="prov__why">{f.rationale}</span>
           </li>
@@ -139,7 +136,7 @@ export function VerdictScreen({ verdict, onAgain }: { verdict: Verdict; onAgain:
       </ul>
 
       <button type="button" className="cta" onClick={onAgain}>
-        Check another receipt
+        {t('verdict_cta')}
       </button>
     </section>
   );

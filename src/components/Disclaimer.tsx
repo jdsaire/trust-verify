@@ -6,20 +6,18 @@
  * notice is persistent rather than tucked into a corner for that reason.
  */
 
+import { useLang } from '../i18n/LangContext.tsx';
+
 export function Disclaimer() {
+  const { t } = useLang();
   return (
     <footer className="disclaimer">
-      <p className="disclaimer__strong">
-        Independent case study. Not affiliated with, endorsed by, or connected to Yape or BCP.
-      </p>
+      <p className="disclaimer__strong">{t('d_strong')}</p>
+      <p>{t('d_p1')}</p>
       <p>
-        A front-end demonstration built against fabricated fixtures. No real payment, account, or
-        ledger is involved, and no real payment can be verified here.
-      </p>
-      <p>
-        Visual treatment follows an <strong>approximate</strong> palette and type reference derived
-        from screen inspection for the case study — not from any published design system, and not a
-        reproduction of any real product.
+        {t('d_p2_pre')}
+        <strong>{t('d_p2_strong')}</strong>
+        {t('d_p2_post')}
       </p>
     </footer>
   );
