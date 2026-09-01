@@ -56,6 +56,11 @@ const en = {
   // Shared actions
   action_cancel: 'Cancel',
 
+  // Mast
+  mast_kicker: 'Brief 04 · Case study',
+  mast_h: 'Is this payment real?',
+  mast_sub: 'A merchant is shown a payment confirmation. This checks whether it happened.',
+
   // ProcessingScrim
   ps_dialog_aria: 'Verifying',
   ps_status_handshake: 'Establishing a secure channel…',
@@ -212,6 +217,11 @@ const es: Record<keyof typeof en, string> = {
   kp_delete_aria: 'Eliminar último dígito',
 
   action_cancel: 'Cancelar',
+
+  mast_kicker: 'Brief 04 · Estudio de caso',
+  mast_h: '¿Este pago es real?',
+  mast_sub:
+    'A un comerciante le muestran una confirmación de pago. Esto verifica si ocurrió.',
 
   ps_dialog_aria: 'Verificando',
   ps_status_handshake: 'Estableciendo un canal seguro…',
