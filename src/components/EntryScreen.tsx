@@ -15,6 +15,7 @@ import { SecureKeypad } from './SecureKeypad.tsx';
 import { NOT_SHOWN, type ClaimedReceipt } from '../domain/receipt.ts';
 import { SAMPLES, type Sample } from '../domain/samples.ts';
 import { useLang } from '../i18n/LangContext.tsx';
+import { SAMPLE_TITLE_KEYS } from '../i18n/sampleTitles.ts';
 
 interface EntryScreenProps {
   onSubmit: (claim: ClaimedReceipt) => void;
@@ -84,7 +85,7 @@ export function EntryScreen({ onSubmit, disabled }: EntryScreenProps) {
             onClick={() => applySample(s)}
             disabled={disabled}
           >
-            {s.title}
+            {t(SAMPLE_TITLE_KEYS[s.id])}
           </button>
         ))}
       </div>

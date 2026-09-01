@@ -45,6 +45,12 @@ const en = {
   entry_hint_amount: 'Enter the amount the receipt claims.',
   entry_hint_operation: 'Enter the operation number (6–12 digits).',
 
+  // Sample receipts — chip labels only; the receipts themselves are domain data
+  sample_genuine_title: 'A genuine receipt',
+  sample_forged_amount_title: 'A real payment, edited',
+  sample_fabricated_title: 'A payment that never happened',
+  sample_unknown_code_title: "A receipt you can't fully read",
+
   // Shared secure keypad
   kp_aria_prefix: 'Secure keypad',
   kp_aria_operation: 'operation number',
@@ -208,6 +214,11 @@ const es: Record<keyof typeof en, string> = {
   entry_cta: 'Verificar este comprobante',
   entry_hint_amount: 'Ingresa el monto que declara el comprobante.',
   entry_hint_operation: 'Ingresa el número de operación (6–12 dígitos).',
+
+  sample_genuine_title: 'Un comprobante genuino',
+  sample_forged_amount_title: 'Un pago real, editado',
+  sample_fabricated_title: 'Un pago que nunca ocurrió',
+  sample_unknown_code_title: 'Un comprobante difícil de leer',
 
   kp_aria_prefix: 'Teclado seguro',
   kp_aria_operation: 'número de operación',
