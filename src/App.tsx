@@ -19,11 +19,14 @@ import { useFlowState } from './services/useFlowState.ts';
 import type { ClaimedReceipt } from './domain/receipt.ts';
 import { LangProvider } from './i18n/LangContext.tsx';
 import { LangToggle } from './i18n/LangToggle.tsx';
+import { useHashRoute } from './router/useHashRoute.ts';
 
 export function App() {
   const service = VerificationSessionService.getInstance();
   const flow = useFlowState();
   const busy = flow.busy;
+
+  useHashRoute(flow.phase);
 
   // Back-press during a verification cancels it. Without this, leaving mid-flight could land the
   // user back on a screen whose state no longer matches the request still in the air.
