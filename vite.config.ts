@@ -61,8 +61,8 @@ function apiFixtures(): PluginOption {
 export default defineConfig({
   root: 'src',
   publicDir: false,
-  // Relative base: the site is served from a /designops/ project path on Pages, and the
-  // no-leading-slash-asset-paths invariant applies to this sub-app as it does to the rest.
+  // Relative base: this repo deploys to jdsaire.github.io/trust-verify/, a project-page subpath,
+  // and relative asset paths resolve correctly under any subpath depth without needing to know it.
   base: './',
   plugins: [react(), apiFixtures()],
   build: {

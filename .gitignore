@@ -3,3 +3,9 @@
 node_modules/
 .vite/
 coverage/
+
+# Build output. Unlike the designops embedding above, this standalone repo has a real CI build
+# (.github/workflows/pages.yml) that builds and deploys fresh on every push — the output never
+# needs to be committed.
+assets/
+404.html
