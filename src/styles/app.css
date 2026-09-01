@@ -104,6 +104,15 @@ body {
 /* Language toggle — new for this repo's standalone i18n layer, styled for the mast's dark surface. */
 .langtoggle {
   position: absolute;
+  /*
+   * Above the mast's own text, not merely after it in the markup. `.mast__kicker` and `.mast__sub`
+   * carry an opacity below 1, which paints them as if they were positioned at z-index 0 — the same
+   * painting step this absolutely positioned toggle lands in with `z-index: auto`, where the later
+   * element in DOM order wins. Without this, the kicker's full-width box sits over the toggle and
+   * takes every pointer event aimed at it: the buttons stay visible (the kicker's background is
+   * transparent) and keyboard-operable, but a click never reaches them.
+   */
+  z-index: 1;
   top: max(16px, env(safe-area-inset-top));
   right: var(--pad);
   display: flex;
