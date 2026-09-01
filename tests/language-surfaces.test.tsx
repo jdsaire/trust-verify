@@ -74,4 +74,16 @@ describe('D-S5-2 — no English left with ES selected', () => {
       expect(screen.queryByRole('button', { name: label })).not.toBeInTheDocument();
     }
   });
+
+  it('sets a Spanish document title and lang attribute', async () => {
+    const user = await selectSpanish();
+
+    expect(document.title).toBe('¿Este pago es real? — Brief 04, estudio de caso');
+    expect(document.documentElement.lang).toBe('es');
+
+    await user.click(screen.getByRole('button', { name: 'EN' }));
+
+    expect(document.title).toBe('Is this payment real? — Brief 04 case study');
+    expect(document.documentElement.lang).toBe('en');
+  });
 });
