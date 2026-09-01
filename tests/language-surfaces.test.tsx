@@ -52,4 +52,26 @@ describe('D-S5-2 — no English left with ES selected', () => {
       ),
     ).not.toBeInTheDocument();
   });
+
+  it('renders the four sample chip labels in Spanish', async () => {
+    await selectSpanish();
+
+    for (const label of [
+      'Un comprobante genuino',
+      'Un pago real, editado',
+      'Un pago que nunca ocurrió',
+      'Un comprobante difícil de leer',
+    ]) {
+      expect(screen.getByRole('button', { name: label })).toBeInTheDocument();
+    }
+
+    for (const label of [
+      'A genuine receipt',
+      'A real payment, edited',
+      'A payment that never happened',
+      "A receipt you can't fully read",
+    ]) {
+      expect(screen.queryByRole('button', { name: label })).not.toBeInTheDocument();
+    }
+  });
 });
