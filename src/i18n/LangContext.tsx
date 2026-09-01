@@ -7,7 +7,15 @@
  * React app, so state + context is the idiomatic fit rather than porting the DOM-attribute walk).
  */
 
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from 'react';
 import { translations, type Lang, type TranslationKey } from './translations.ts';
 
 const STORAGE_KEY = 'jds-lang';
@@ -41,6 +49,15 @@ export function LangProvider({ children }: { children: ReactNode }) {
       // browsing, quota) should not stop the toggle from working for the rest of the session.
     }
   }, []);
+
+  // The document's own chrome follows the choice as well as the interface does: the tab title,
+  // and the lang attribute that tells assistive tech and translation heuristics which language the
+  // page is actually in. src/index.html keeps the English pair as its static default, which is
+  // correct at load — EN is what readStoredLang() falls back to, and what renders with JS off.
+  useEffect(() => {
+    document.title = translations[lang].doc_title;
+    document.documentElement.lang = lang.toLowerCase();
+  }, [lang]);
 
   const t = useCallback((key: TranslationKey) => translations[lang][key], [lang]);
 

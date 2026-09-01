@@ -15,6 +15,9 @@
 export type Lang = 'EN' | 'ES';
 
 const en = {
+  // Document chrome
+  doc_title: 'Is this payment real? — Brief 04 case study',
+
   // Disclaimer
   d_strong: 'Independent case study. Not affiliated with, endorsed by, or connected to Yape or BCP.',
   d_p1:
@@ -186,6 +189,8 @@ const en = {
 };
 
 const es: Record<keyof typeof en, string> = {
+  doc_title: '¿Este pago es real? — Brief 04, estudio de caso',
+
   d_strong: 'Estudio de caso independiente. Sin afiliación, respaldo ni conexión con Yape o BCP.',
   d_p1:
     'Una demostración de front-end construida sobre datos ficticios. No hay ningún pago, cuenta o registro real involucrado, y ningún pago real puede verificarse aquí.',
