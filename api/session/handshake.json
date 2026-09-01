@@ -1,0 +1,32 @@
+{
+  "_note": "SIMULATED transport-security material. These certificates, fingerprints, cipher suite and risk signals are fabricated fixtures authored for this case study. They are not real credentials, are not issued by any certificate authority, and describe no real connection. The page's actual transport security is whatever the host provides.",
+  "protocol": "TLS 1.2",
+  "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256",
+  "serverCertificate": {
+    "subject": "CN=ledger.verify.example, O=Case Study Fixture, C=PE",
+    "issuer": "CN=Case Study Demo CA, O=Case Study Fixture, C=PE",
+    "serial": "3A:7F:19:C4:08:5E:2B:90",
+    "validFrom": "2026-01-04",
+    "validTo": "2027-01-04",
+    "keyAlgorithm": "RSA 2048-bit",
+    "fingerprintSha256": "9F:2C:81:A0:64:D3:17:BE:52:0A:C9:74:38:6D:1F:E5:B8:47:20:93:CA:6E:15:D8:39:B1:7C:04:A2:56:E0:38"
+  },
+  "clientCertificate": {
+    "subject": "CN=merchant-terminal-4471, O=Case Study Fixture, C=PE",
+    "issuer": "CN=Case Study Demo CA, O=Case Study Fixture, C=PE",
+    "serial": "6B:04:D2:8A:31:F7:5C:1D",
+    "validFrom": "2026-03-22",
+    "validTo": "2027-03-22",
+    "keyAlgorithm": "RSA 2048-bit",
+    "fingerprintSha256": "1D:B6:40:7E:29:98:C5:03:AF:62:11:D7:8B:34:F0:5A:71:CE:26:94:03:E8:57:2F:B0:9D:48:16:C3:7A:E1:52"
+  },
+  "adaptiveRisk": {
+    "score": 12,
+    "band": "Low risk",
+    "signals": [
+      "Device fingerprint recognised from an earlier session",
+      "Verification velocity within the normal range for this terminal",
+      "Request origin consistent with the registered merchant region"
+    ]
+  }
+}

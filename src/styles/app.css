@@ -1,0 +1,988 @@
+/*
+ * Styles for the Brief 04 case study.
+ *
+ * The palette and the type rules below follow an APPROXIMATE reference extracted from screen
+ * inspection for the selection dossier — four colour tokens, a monetary-scale rule, and a few
+ * interaction rules. They are approximations, not anyone's design tokens, and the interface they
+ * build is this tool, not a reproduction of the reference application.
+ *
+ * The one type rule carried over deliberately: monetary values are oversized and bold, because it
+ * is the most consistent rule in the reference and it is what a merchant's eye goes to first.
+ */
+
+:root {
+  /* Approximate colour tokens. */
+  --brand-primary: #742c8a; /* purple — structure, headers, branding */
+  --action-primary: #00c2a0; /* teal — reserved for the primary action only */
+  --surface-modal: #fce8ff; /* light lilac — modal surfaces */
+  --surface-base: #ffffff;
+
+  --ink: #23202b;
+  --ink-soft: #625c6e;
+  --ink-faint: #8b8595;
+  --line: #e6e1ec;
+  --disabled: #c9c4d2;
+
+  --ok: #17795e;
+  --ok-bg: #e7f6f1;
+  --bad: #b3261e;
+  --bad-bg: #fdecea;
+  --warn-bg: #fff4e5;
+  --warn-line: #e8a33d;
+
+  --radius: 14px;
+  --radius-sm: 9px;
+  --pad: 16px;
+  --shadow: 0 1px 2px rgb(35 32 43 / 6%), 0 8px 24px rgb(35 32 43 / 8%);
+  --font:
+    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: #f4f1f7;
+  -webkit-text-size-adjust: 100%;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+/* ---------------------------------------------------------------- shell */
+
+.shell {
+  max-width: 460px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: var(--surface-base);
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * Backstop for the scrim. `inert` already blocks pointer and focus, but it is worth stating the
+ * pointer rule explicitly rather than trusting a single mechanism on the highest-severity
+ * interaction rule in the flow.
+ */
+.shell--inert {
+  pointer-events: none;
+  user-select: none;
+}
+
+.mast {
+  background: var(--brand-primary);
+  color: #fff;
+  padding: 26px var(--pad) 22px;
+  padding-top: max(26px, env(safe-area-inset-top));
+}
+
+.mast__kicker {
+  margin: 0 0 6px;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  opacity: 0.82;
+}
+
+.mast__h {
+  margin: 0 0 6px;
+  font-size: 26px;
+  line-height: 1.18;
+  font-weight: 700;
+}
+
+.mast__sub {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+.main {
+  flex: 1;
+  padding: var(--pad);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* ---------------------------------------------------------------- entry */
+
+.entry__h {
+  margin: 0 0 6px;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.entry__lede {
+  margin: 0 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.samples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+.samples__chip {
+  font: inherit;
+  font-size: 12px;
+  padding: 8px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: #faf8fc;
+  color: var(--ink-soft);
+  cursor: pointer;
+  min-height: 34px;
+}
+
+.samples__chip:hover:not(:disabled) {
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+}
+
+.fields {
+  display: grid;
+  gap: 9px;
+  margin-bottom: 14px;
+}
+
+.field {
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 13px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  cursor: pointer;
+  min-height: 60px;
+}
+
+.field--on {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgb(116 44 138 / 10%);
+}
+
+.field__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-faint);
+}
+
+.field__value {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.field__value--mono {
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+
+/* The monetary-scale rule: amounts dominate by size. */
+.field__value--money {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ---------------------------------------------------------------- keypad */
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.keypad__key {
+  font: inherit;
+  font-size: 20px;
+  font-weight: 600;
+  /* Dismissal and key affordances stay at or above the 44px touch-target floor. */
+  min-height: 52px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fbfafc;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.keypad__key:active:not(:disabled) {
+  background: var(--surface-modal);
+}
+
+.keypad__key--util {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.keypad__key:disabled {
+  color: var(--disabled);
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------- optional */
+
+.optional {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 11px 13px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.optional summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 24px;
+}
+
+.optional__note {
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  min-height: 30px;
+}
+
+.text {
+  font: inherit;
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  min-height: 42px;
+}
+
+.text:disabled {
+  background: #f7f5f9;
+  color: var(--disabled);
+}
+
+/* ---------------------------------------------------------------- cta */
+
+/*
+ * Teal is reserved for the primary action and nothing else — the one place in the interface it
+ * appears. A failed precondition renders the button grey and, per the reference's own rule, it
+ * stops responding to taps rather than merely looking inactive.
+ */
+.cta {
+  font: inherit;
+  font-size: 16px;
+  font-weight: 700;
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--action-primary);
+  color: #06312a;
+  cursor: pointer;
+}
+
+.cta:disabled {
+  background: var(--disabled);
+  color: #fff;
+  cursor: default;
+  pointer-events: none;
+}
+
+.cta__hint {
+  margin: 8px 0 0;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+.error {
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  background: var(--bad-bg);
+  color: var(--bad);
+  font-size: 13.5px;
+}
+
+/* ---------------------------------------------------------------- scrim */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgb(24 18 30 / 78%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+
+.scrim__panel {
+  background: var(--surface-modal);
+  border-radius: var(--radius);
+  padding: 22px 18px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.spinner {
+  width: 34px;
+  height: 34px;
+  margin: 0 auto 12px;
+  border: 3px solid rgb(116 44 138 / 22%);
+  border-top-color: var(--brand-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.scrim__status {
+  margin: 0 0 14px;
+  font-weight: 600;
+  font-size: 14.5px;
+  color: var(--brand-primary);
+}
+
+.scrim__steps {
+  text-align: left;
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 11px 12px;
+  margin-bottom: 14px;
+}
+
+.scrim__stepsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+
+.scrim__steps ol {
+  margin: 0;
+  padding-left: 16px;
+  display: grid;
+  gap: 7px;
+}
+
+.scrim__steps li {
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.scrim__steps strong {
+  display: block;
+  color: var(--ink);
+}
+
+.scrim__steps span {
+  color: var(--ink-faint);
+  word-break: break-word;
+}
+
+.scrim__cancel {
+  font: inherit;
+  font-size: 13.5px;
+  background: none;
+  border: 0;
+  color: var(--brand-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  min-height: 44px;
+  padding: 0 12px;
+}
+
+/* ---------------------------------------------------------------- step-up */
+
+.stepup {
+  text-align: left;
+}
+
+.stepup__h {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand-primary);
+}
+
+.stepup__why {
+  margin: 0 0 8px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.stepup__signals {
+  margin: 0 0 12px;
+  padding-left: 16px;
+  display: grid;
+  gap: 3px;
+}
+
+.stepup__signals li {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.pin {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin: 4px 0 14px;
+}
+
+.pin__dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid var(--brand-primary);
+  background: transparent;
+}
+
+.pin__dot--on {
+  background: var(--brand-primary);
+}
+
+.stepup__note {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------- risk mode */
+
+.riskmode {
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 11px;
+  margin-bottom: 11px;
+}
+
+.riskmode__k {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.riskmode__opts {
+  display: flex;
+  gap: 6px;
+  margin: 7px 0;
+}
+
+.riskmode__opt {
+  font: inherit;
+  font-size: 12px;
+  flex: 1;
+  min-height: 38px;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: #fbfafc;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.riskmode__opt--on {
+  border-color: var(--brand-primary);
+  background: var(--surface-modal);
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
+.riskmode__note {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--ink-faint);
+}
+
+/* ---------------------------------------------------------------- verdict */
+
+.verdict__eyebrow {
+  margin: 0 0 4px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.verdict__h {
+  margin: 0 0 6px;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.verdict--verified .verdict__h {
+  color: var(--ok);
+}
+
+.verdict--mismatch .verdict__h,
+.verdict--not-found .verdict__h {
+  color: var(--bad);
+}
+
+.verdict__line {
+  margin: 0 0 12px;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.verdict__flag {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  background: var(--bad-bg);
+  color: var(--bad);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.verdict__skipped {
+  margin: 0 0 12px;
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  background: var(--warn-bg);
+  border-left: 3px solid var(--warn-line);
+  font-size: 13px;
+  line-height: 1.5;
+  color: #6b4a12;
+}
+
+.verdict__sub {
+  margin: 20px 0 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+.record {
+  margin: 0;
+  display: grid;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.record > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff;
+  padding: 9px 12px;
+}
+
+.record dt {
+  font-size: 13px;
+  color: var(--ink-faint);
+}
+
+.record dd {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.cmp {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.cmp th,
+.cmp td {
+  text-align: left;
+  padding: 9px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.cmp thead th {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  font-weight: 600;
+}
+
+.cmp tbody th {
+  font-weight: 600;
+}
+
+.cmp--bad td:last-child {
+  color: var(--bad);
+  font-weight: 700;
+}
+
+.cmp--ok td:last-child {
+  color: var(--ok);
+}
+
+.cmp--skip {
+  color: var(--ink-faint);
+}
+
+.cmp__mark {
+  margin-left: 6px;
+  font-weight: 700;
+}
+
+.prov {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: grid;
+  gap: 7px;
+}
+
+.prov__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 3px 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: #fbfafc;
+}
+
+/* The one field that settles the question is styled to say so. */
+.prov__row--backend-anchored {
+  border-color: var(--ok);
+  background: var(--ok-bg);
+}
+
+.prov__label {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.prov__tag {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-faint);
+  align-self: center;
+}
+
+.prov__row--backend-anchored .prov__tag {
+  color: var(--ok);
+  font-weight: 700;
+}
+
+.prov__why {
+  grid-column: 1 / -1;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- security */
+
+.sec {
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+}
+
+.sec__h {
+  margin: 0 0 12px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+}
+
+/*
+ * The two panels are visually distinct on purpose: a reader must be able to tell staged from real
+ * at a glance, without reading a badge. Simulated is dashed and tinted; implemented is solid.
+ */
+.sec__panel {
+  border-radius: var(--radius-sm);
+  padding: 13px;
+  margin-bottom: 12px;
+}
+
+.sec__panel--sim {
+  border: 1.5px dashed var(--warn-line);
+  background: var(--warn-bg);
+}
+
+.sec__panel--impl {
+  border: 1.5px solid var(--ok);
+  background: var(--ok-bg);
+}
+
+.sec__panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  margin-bottom: 8px;
+}
+
+.sec__panelHead h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sec__panelNote {
+  margin: 0 0 11px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6b4a12;
+}
+
+.sec__panelNote--impl {
+  color: #145a46;
+}
+
+.sec__empty {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--ink-faint);
+}
+
+.sec__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px dotted rgb(232 163 61 / 45%);
+  font-size: 12.5px;
+}
+
+.sec__k {
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+
+.sec__v {
+  text-align: right;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.certs {
+  display: grid;
+  gap: 9px;
+  margin-top: 11px;
+}
+
+.cert {
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 11px;
+}
+
+.cert__h {
+  margin: 0 0 7px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+}
+
+.cert__dl {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.cert__dl > div {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 8px;
+}
+
+.cert__dl dt {
+  font-size: 11.5px;
+  color: var(--ink-faint);
+}
+
+.cert__dl dd {
+  margin: 0;
+  font-size: 11.5px;
+  word-break: break-all;
+}
+
+.cert__fp {
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.risk {
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 10px 11px;
+  margin-top: 9px;
+}
+
+.risk__band {
+  margin: 0 0 7px;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--ok);
+}
+
+.risk__signals {
+  margin: 0 0 7px;
+  padding-left: 16px;
+  display: grid;
+  gap: 3px;
+}
+
+.risk__signals li {
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.risk__note {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--ink-faint);
+  font-style: italic;
+}
+
+.impl {
+  margin: 0;
+  padding-left: 17px;
+  display: grid;
+  gap: 6px;
+}
+
+.impl li {
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.impl code {
+  font-family: var(--mono);
+  font-size: 11px;
+  background: rgb(23 121 94 / 10%);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- badges */
+
+.badge {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  padding: 3px 7px;
+  border-radius: 4px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badge--simulated {
+  background: var(--warn-line);
+  color: #35240a;
+}
+
+.badge--implemented {
+  background: var(--ok);
+  color: #fff;
+}
+
+/* ---------------------------------------------------------------- footer */
+
+.disclaimer {
+  background: #efeaf3;
+  border-top: 1px solid var(--line);
+  padding: 16px var(--pad);
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+.disclaimer p {
+  margin: 0 0 7px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.disclaimer p:last-child {
+  margin-bottom: 0;
+}
+
+.disclaimer__strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---------------------------------------------------------------- a11y */
+
+:focus-visible {
+  outline: 3px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
