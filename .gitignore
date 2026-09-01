@@ -1,0 +1,5 @@
+# Sub-app build tooling — scoped to work/yape-trust-verify/ only.
+# The site root deploys the repository as-is, so build inputs must never be uploaded.
+node_modules/
+.vite/
+coverage/
