@@ -8,6 +8,7 @@
  */
 
 import { useEffect } from 'react';
+import { Mast } from './components/Mast.tsx';
 import { EntryScreen } from './components/EntryScreen.tsx';
 import { ProcessingScrim } from './components/ProcessingScrim.tsx';
 import { StepUpChallenge } from './components/StepUpChallenge.tsx';
@@ -18,7 +19,6 @@ import { VerificationSessionService } from './services/VerificationSessionServic
 import { useFlowState } from './services/useFlowState.ts';
 import type { ClaimedReceipt } from './domain/receipt.ts';
 import { LangProvider } from './i18n/LangContext.tsx';
-import { LangToggle } from './i18n/LangToggle.tsx';
 import { useHashRoute } from './router/useHashRoute.ts';
 
 export function App() {
@@ -56,14 +56,7 @@ export function App() {
         aria-hidden={busy || undefined}
         inert={busy}
       >
-        <header className="mast">
-          <LangToggle />
-          <p className="mast__kicker">Brief 04 · Case study</p>
-          <h1 className="mast__h">Is this payment real?</h1>
-          <p className="mast__sub">
-            A merchant is shown a payment confirmation. This checks whether it happened.
-          </p>
-        </header>
+        <Mast />
 
         <main className="main">
           {flow.verdict ? (

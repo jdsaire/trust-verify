@@ -7,8 +7,16 @@
 
 import { NOT_SHOWN, type ClaimedReceipt } from './receipt.ts';
 
+/**
+ * A sample's stable identifier. A union rather than a bare string so the component layer can map
+ * it to a display label exhaustively — a sample without one fails the typecheck instead of
+ * rendering English inside a Spanish interface. The mapping itself lives in src/i18n/, not here:
+ * this layer carries no React and no i18n.
+ */
+export type SampleId = 'genuine' | 'forged-amount' | 'fabricated' | 'unknown-code';
+
 export interface Sample {
-  id: string;
+  id: SampleId;
   title: string;
   blurb: string;
   claim: ClaimedReceipt;

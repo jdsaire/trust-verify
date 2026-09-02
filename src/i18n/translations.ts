@@ -15,6 +15,9 @@
 export type Lang = 'EN' | 'ES';
 
 const en = {
+  // Document chrome
+  doc_title: 'Is this payment real? — Brief 04 case study',
+
   // Disclaimer
   d_strong: 'Independent case study. Not affiliated with, endorsed by, or connected to Yape or BCP.',
   d_p1:
@@ -45,6 +48,12 @@ const en = {
   entry_hint_amount: 'Enter the amount the receipt claims.',
   entry_hint_operation: 'Enter the operation number (6–12 digits).',
 
+  // Sample receipts — chip labels only; the receipts themselves are domain data
+  sample_genuine_title: 'A genuine receipt',
+  sample_forged_amount_title: 'A real payment, edited',
+  sample_fabricated_title: 'A payment that never happened',
+  sample_unknown_code_title: "A receipt you can't fully read",
+
   // Shared secure keypad
   kp_aria_prefix: 'Secure keypad',
   kp_aria_operation: 'operation number',
@@ -55,6 +64,11 @@ const en = {
 
   // Shared actions
   action_cancel: 'Cancel',
+
+  // Mast
+  mast_kicker: 'Brief 04 · Case study',
+  mast_h: 'Is this payment real?',
+  mast_sub: 'A merchant is shown a payment confirmation. This checks whether it happened.',
 
   // ProcessingScrim
   ps_dialog_aria: 'Verifying',
@@ -175,6 +189,8 @@ const en = {
 };
 
 const es: Record<keyof typeof en, string> = {
+  doc_title: '¿Este pago es real? — Brief 04, estudio de caso',
+
   d_strong: 'Estudio de caso independiente. Sin afiliación, respaldo ni conexión con Yape o BCP.',
   d_p1:
     'Una demostración de front-end construida sobre datos ficticios. No hay ningún pago, cuenta o registro real involucrado, y ningún pago real puede verificarse aquí.',
@@ -204,6 +220,11 @@ const es: Record<keyof typeof en, string> = {
   entry_hint_amount: 'Ingresa el monto que declara el comprobante.',
   entry_hint_operation: 'Ingresa el número de operación (6–12 dígitos).',
 
+  sample_genuine_title: 'Un comprobante genuino',
+  sample_forged_amount_title: 'Un pago real, editado',
+  sample_fabricated_title: 'Un pago que nunca ocurrió',
+  sample_unknown_code_title: 'Un comprobante difícil de leer',
+
   kp_aria_prefix: 'Teclado seguro',
   kp_aria_operation: 'número de operación',
   kp_aria_amount: 'monto',
@@ -212,6 +233,11 @@ const es: Record<keyof typeof en, string> = {
   kp_delete_aria: 'Eliminar último dígito',
 
   action_cancel: 'Cancelar',
+
+  mast_kicker: 'Brief 04 · Estudio de caso',
+  mast_h: '¿Este pago es real?',
+  mast_sub:
+    'A un comerciante le muestran una confirmación de pago. Esto verifica si ocurrió.',
 
   ps_dialog_aria: 'Verificando',
   ps_status_handshake: 'Estableciendo un canal seguro…',
